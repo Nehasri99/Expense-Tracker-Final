@@ -1,0 +1,412 @@
+/* --- Global Variables & Resets --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    --primary-color: #3b82f6;
+    --primary-hover: #2563eb;
+    --secondary-color: #6b7280;
+    --secondary-hover: #4b5563;
+    --success-color: #2ecc71;
+    --error-color: #e74c3c;
+    --bg-light: #f9fafb;
+    --text-dark: #1a202c;
+    --text-light: #6a7c92;
+    --border-color: #d1d5db;
+    --card-bg: #ffffff;
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --border-radius: 20px;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* --- Main Layout --- */
+.home-container {
+    width: 100%;
+    margin: 2rem auto; 
+    padding: 0 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    flex:1;
+}
+.home-container h1 {
+    text-align: center;
+}
+
+/* --- Generic Card Style --- */
+.card {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    box-shadow: var(--card-shadow);
+}
+
+/* --- Utility Classes --- */
+.status-text {
+    text-align: center;
+    color: var(--text-light);
+    padding: 2rem 0;
+}
+
+/* --- Buttons --- */
+.btn-primary, .btn-secondary, .logout-btn {
+    font-family: 'Inter', sans-serif;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.6rem 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 0.6rem 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+.btn-secondary:hover {
+    background-color: var(--secondary-hover);
+}
+
+.logout-btn {
+    background: var(--error-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+    font-weight: 500;
+}
+.logout-btn:hover {
+    background: #c0392b;
+}
+
+/* --- Header & Filtering --- */
+.header-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.filter-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+.filter-controls label {
+    font-size: 0.9rem;
+    color: var(--text-light);
+}
+.filter-controls input {
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-family: 'Inter', sans-serif;
+}
+
+/* --- Balance & Summary --- */
+.balance-section {
+    text-align: center;
+}
+.balance-section h2 {
+    color: var(--text-light);
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+.balance-amount {
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+.summary-details {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1.5rem;
+}
+.summary-title {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+.summary-value {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+.income-card, .expense-card {
+    flex: 1;
+    min-width: 180px;
+    max-width: 250px;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    color: white;
+}
+.income-card {
+    background-color: var(--success-color);
+}
+.expense-card {
+    background-color: var(--error-color);
+}
+
+/* --- Expense Table --- */
+.expense-table-container {
+    overflow-x: auto;
+}
+.expense-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.expense-table th, .expense-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+    vertical-align: middle;
+}
+.expense-table th {
+    background-color: var(--bg-light);
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.75px;
+    color: var(--text-light);
+}
+.expense-table td {
+    font-weight: 500;
+}
+.positive {
+    color: var(--success-color);
+    font-weight: 600;
+}
+.negative {
+    color: var(--error-color);
+    font-weight: 600;
+}
+.delete-button {
+    background: var(--error-color);
+    color: white;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    line-height: 1;
+    transition: background 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.delete-button:hover {
+    background: #c0392b;
+}
+
+/* --- Expense Form --- */
+.expense-form form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.expense-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+.expense-form input,
+.expense-form select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: 'Inter', sans-serif;
+}
+
+/* --- Authentication Pages --- */
+.auth-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.auth-container {
+    background-color: var(--card-bg);
+    padding: 32px 48px;
+    border-radius: var(--border-radius);
+    width: 100%;
+    max-width: 400px;
+    box-shadow: var(--card-shadow);
+}
+.auth-container h1 {
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: 600;
+}
+
+/* --- NEW: Typographic Hierarchy --- */
+.header-top h1 {
+    font-weight: 600;
+}
+
+h1, h2 {
+    font-weight: 600;
+}
+.budget-manager h2 {
+    margin-bottom: 1.5rem;
+}
+.budget-input-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+.budget-input-group label {
+    font-weight: 500;
+    flex-basis: 120px;
+    flex-shrink: 0;
+}
+.input-with-button {
+    display: flex;
+    flex-grow: 1;
+    gap: 0.5rem;
+}
+.input-with-button input {
+    flex-grow: 1;
+}
+
+/* Budget Progress Bar Styles */
+.budget-item { margin-bottom: 1.5rem; }
+.budget-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+.progress-bar-background {
+    width: 100%;
+    height: 10px;
+    background-color: #e5e7eb;
+    border-radius: 5px;
+    overflow: hidden;
+}
+.progress-bar-foreground {
+    height: 100%;
+    background-color: var(--primary-color);
+    border-radius: 5px;
+    transition: width 0.5s ease-in-out;
+}
+.progress-bar-foreground.over-budget { background-color: var(--error-color); }
+.budget-remaining {
+    text-align: right;
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+    color: var(--text-light);
+}
+.over-budget-text { color: var(--error-color); font-weight: 500; }
+
+
+
+/* --- Dark Mode Styles --- */
+/* These rules will only apply when the body has the "dark-mode" class */
+
+body.dark-mode {
+    background-color: #121212; /* A standard dark background */
+    color: #e0e0e0;           /* A light gray for default text */
+}
+
+/* Style for cards (e.g., Balance, Profile, Analytics cards) */
+body.dark-mode .card {
+    background-color: #1e1e1e;
+    border: 1px solid #2d2d2d;
+}
+
+/* Make sure headings are white */
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3 {
+    color: #ffffff;
+}
+
+/* Style for input fields and select dropdowns */
+body.dark-mode input,
+body.dark-mode select {
+    background-color: #2a2a2a;
+    color: #f5f5f5;
+    border: 1px solid #555;
+}
+
+/* Style for the table in the dashboard */
+body.dark-mode .expense-table th {
+    background-color: #2a2a2a;
+    color: #a0a0a0;
+}
+
+body.dark-mode .expense-table td {
+    border-bottom: 1px solid #333;
+}
+
+/* Style for secondary buttons like "Change Password" */
+body.dark-mode .btn-secondary {
+    background-color: #444;
+    color: #eee;
+}
+
+body.dark-mode .btn-secondary:hover {
+    background-color: #555;
+}
+
+/* Style for the bottom navigation bar */
+body.dark-mode .bottom-nav {
+    background-color: #1e1e1e;
+    border-top: 1px solid #333;
+}
+
+body.dark-mode .nav-link {
+    color: #f5f5f5; /* Light text for nav links */
+}
+
+body.dark-mode .nav-link.active {
+    color: #3b82f6; /* Keep the active link blue */
+}
+
+body.dark-mode .nav-link:hover {
+    color: #3b82f6;
+}
+body.dark-mode .budget-input-group label { color: #e0e0e0; }
+body.dark-mode .budget-info { color: #e0e0e0; }
+body.dark-mode .progress-bar-background { background-color: #333; }

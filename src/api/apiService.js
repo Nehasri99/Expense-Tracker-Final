@@ -1,5 +1,5 @@
 import { toast } from 'react-toastify';
-
+export const getSpendingInsights = () => request('/expenses/insights');
 const API_BASE_URL = 'http://localhost:8080';
 
 // A helper function to handle API requests, headers, and errors
@@ -66,3 +66,12 @@ export const deleteExpense = (id) => {
         method: 'DELETE',
     });
 };
+export const getBudgets = () => request('/budgets'); // Assuming a GET /budgets route
+
+export const setBudget = (budgetData) => {
+  return request('/budgets', {
+      method: 'POST',
+      body: JSON.stringify(budgetData),
+  });
+};
+
