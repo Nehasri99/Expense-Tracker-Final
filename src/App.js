@@ -15,7 +15,6 @@ import AddTransactionPage from './pages/AddTransactionPage';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import MainLayout from './components/common/MainLayout';
 import ChangePassword from './pages/ChangePassword';
-
 // --- MAIN APP ROUTER ---
 function App() {
     return (

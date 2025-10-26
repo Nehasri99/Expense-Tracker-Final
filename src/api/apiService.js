@@ -74,4 +74,9 @@ export const setBudget = (budgetData) => {
       body: JSON.stringify(budgetData),
   });
 };
-
+// Correct - Added /api prefix
+export const getUserProfile = () => request('/api/users/profile');
+export const changeUserPassword = (passwords) => request('/api/users/change-password', {
+    method: 'PUT', 
+    body: JSON.stringify(passwords), // Sends { currentPassword, newPassword }
+});

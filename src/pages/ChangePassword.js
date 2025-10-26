@@ -1,118 +1,101 @@
-// inside ChangePasswordPage.js
 import React, { useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
+// Import your API service function (we'll create this next)
+import { changeUserPassword } from '../api/apiService'; 
+import '../styles/main.css'; // Assuming common styles
 
 const ChangePassword = () => {
-    const [current, setCurrent] = useState('');
-    const [newPass, setNewPass] = useState('');
-    const [confirm, setConfirm] = useState('');
+    const [currentPassword, setCurrentPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
 
-    const handleChangePassword = () => {
-        if (newPass !== confirm) {
-            toast.error('Passwords do not match!');
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setIsLoading(true);
+
+        if (newPassword !== confirmPassword) {
+            toast.error('New passwords do not match!');
+            setIsLoading(false);
             return;
         }
-        // Call your backend API here
-        toast.success('Password changed successfully!');
-        setCurrent('');
-        setNewPass('');
-        setConfirm('');
+
+        if (!currentPassword || !newPassword) {
+             toast.error('All password fields are required.');
+             setIsLoading(false);
+             return;
+        }
+
+        try {
+            // Call the API service function
+            const result = await changeUserPassword({ currentPassword, newPassword });
+            if (result.success) {
+                toast.success('Password changed successfully! Redirecting...');
+                // Clear fields and navigate back to settings after a delay
+                setCurrentPassword('');
+                setNewPassword('');
+                setConfirmPassword('');
+                setTimeout(() => navigate('/settings'), 2000); 
+            } else {
+                // Display error message from backend
+                toast.error(result.message || 'Failed to change password.');
+            }
+        } catch (error) {
+            // Display network or unexpected errors
+            toast.error(error.message || 'An error occurred. Please try again.');
+            console.error("Change Password Error:", error);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
-        <div className="change-password-container">
-            <h2>Change Password</h2>
-            <input
-                placeholder="Current Password"
-                type="password"
-                value={current}
-                onChange={(e) => setCurrent(e.target.value)}
-            />
-            <input
-                placeholder="New Password"
-                type="password"
-                value={newPass}
-                onChange={(e) => setNewPass(e.target.value)}
-            />
-            <input
-                placeholder="Confirm New Password"
-                type="password"
-                value={confirm}
-                onChange={(e) => setConfirm(e.target.value)}
-            />
-            <button onClick={handleChangePassword}>Submit</button>
-
+        <div className="home-container">
+            <h1>Change Password</h1>
+            <div className="card" style={{ maxWidth: '500px', margin: '1rem auto' }}>
+                <form onSubmit={handleSubmit} className="expense-form"> {/* Reuse expense-form styling */}
+                    <div>
+                        <label htmlFor="currentPassword">Current Password</label>
+                        <input
+                            id="currentPassword"
+                            placeholder="Enter your current password"
+                            type="password"
+                            value={currentPassword}
+                            onChange={(e) => setCurrentPassword(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="newPassword">New Password</label>
+                        <input
+                            id="newPassword"
+                            placeholder="Enter your new password"
+                            type="password"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                            required
+                        />
+                    </div>
+                     <div>
+                        <label htmlFor="confirmPassword">Confirm New Password</label>
+                        <input
+                            id="confirmPassword"
+                            placeholder="Confirm your new password"
+                            type="password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <button type="submit" className="btn-primary" disabled={isLoading} style={{ width: '100%', marginTop: '1rem' }}>
+                        {isLoading ? 'Updating...' : 'Change Password'}
+                    </button>
+                </form>
+            </div>
             <ToastContainer position="top-right" />
-
-            {/* --- Embedded CSS --- */}
-            <style>{`
-                .change-password-container {
-                    max-width: 400px;
-                    margin: 60px auto;
-                    background-color: #fff;
-                    padding: 25px;
-                    border-radius: 12px;
-                    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-                    font-family: Arial, sans-serif;
-                }
-
-                .change-password-container h2 {
-                    text-align: center;
-                    margin-bottom: 20px;
-                }
-
-                .change-password-container input {
-                    width: 100%;
-                    padding: 10px;
-                    margin-bottom: 15px;
-                    border-radius: 6px;
-                    border: 1px solid #ccc;
-                    font-size: 1rem;
-                    transition: border 0.3s, background-color 0.3s;
-                }
-
-                .change-password-container input:focus {
-                    border-color: #007bff;
-                    outline: none;
-                }
-
-                .change-password-container button {
-                    width: 100%;
-                    padding: 12px;
-                    background-color: #007bff;
-                    color: white;
-                    font-weight: bold;
-                    border: none;
-                    border-radius: 6px;
-                    cursor: pointer;
-                    transition: background-color 0.2s;
-                }
-
-                .change-password-container button:hover {
-                    background-color: #0056b3;
-                }
-
-                /* Dark Mode support */
-                body.dark-mode .change-password-container {
-                    background-color: #1e1e1e;
-                    color: #f5f5f5;
-                }
-
-                body.dark-mode .change-password-container input {
-                    background-color: #2a2a2a;
-                    color: #f5f5f5;
-                    border: 1px solid #555;
-                }
-
-                body.dark-mode .change-password-container button {
-                    background-color: #17a2b8;
-                }
-
-                body.dark-mode .change-password-container button:hover {
-                    background-color: #117a8b;
-                }
-            `}</style>
         </div>
     );
 };

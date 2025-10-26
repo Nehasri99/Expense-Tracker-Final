@@ -99,38 +99,60 @@ const useExpenses = () => {
         return Object.entries(groupedData).map(([name, value]) => ({ name, value }));
     }, [filteredExpenses]);
 
-    const spendingTrend = useMemo(() => {
+   const spendingTrend = useMemo(() => {
         const last7Days = [];
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        // Create an array of the last 7 days
         for (let i = 6; i >= 0; i--) {
             const day = new Date(today);
             day.setDate(today.getDate() - i);
             last7Days.push(day);
         }
 
-        // Group expenses by date
+        // Add a check to ensure allExpenses is an array
+        if (!Array.isArray(allExpenses)) {
+            console.error("allExpenses is not an array:", allExpenses);
+            return last7Days.map(date => ({ day: date.toLocaleDateString('en-US', { weekday: 'short' }), amount: 0 })); // Return default empty data
+        }
+
         const expensesByDate = allExpenses
-            .filter(e => e.amount < 0)
+            .filter(e => e && typeof e === 'object' && e.amount < 0) // Ensure 'e' is an object
             .reduce((acc, expense) => {
-                const expenseDate = new Date(expense.date).setHours(0, 0, 0, 0);
-                const dateString = new Date(expenseDate).toISOString().split('T')[0];
-                acc[dateString] = (acc[dateString] || 0) + Math.abs(expense.amount);
+                try {
+                    // --- Start of Enhanced Robust Fix ---
+                    // 1. Check if expense.date exists and is not null/undefined
+                    if (expense.date != null) { // Use != to check for both null and undefined
+                        const parsedDate = new Date(expense.date);
+                        
+                        // 2. Check if the parsed date is valid
+                        if (!isNaN(parsedDate.getTime())) { 
+                            parsedDate.setHours(0, 0, 0, 0);
+                            const dateString = parsedDate.toISOString().split('T')[0]; 
+                            acc[dateString] = (acc[dateString] || 0) + Math.abs(expense.amount);
+                        } else {
+                            // Log the specific problematic expense date
+                            console.warn(`Skipping expense due to invalid date format: Date value was "${expense.date}"`, expense);
+                        }
+                    } else {
+                         // Log if the date field is missing entirely
+                         console.warn("Skipping expense because date field is missing or null:", expense);
+                    }
+                    // --- End of Enhanced Robust Fix ---
+                } catch (error) {
+                    console.error("Error processing date for expense:", expense, error);
+                }
                 return acc;
             }, {});
 
-        // Map the last 7 days to the chart data format
         return last7Days.map(date => {
             const dateString = date.toISOString().split('T')[0];
             return {
-                day: date.toLocaleDateString('en-US', { weekday: 'short' }), // e.g., "Mon"
+                day: date.toLocaleDateString('en-US', { weekday: 'short' }),
                 amount: expensesByDate[dateString] || 0,
             };
         });
     }, [allExpenses]);
-
    const insights = useMemo(() => {
         if (filteredExpenses.length === 0) return [];
 
